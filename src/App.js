@@ -1,26 +1,47 @@
 import React from 'react';
-import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default class Shifu extends React.Component {
+  state = {
+    shifu: {
+      header: '',
+      footer: '',
+      js: [],
+      css: []
+    }
+  };
 
-export default App;
+  componentDidMount() {
+    axios.get('http://localhost:4000/api/').then(res => {
+      const shifuData = res.data;
+      this.setState({
+        shifu: {
+          header: shifuData.header,
+          footer: shifuData.footer,
+          js: shifuData.js,
+          css: shifuData.css,
+        }
+      });
+      this.state.shifu.css.forEach((el) => {
+        const shifuCss = document.createElement('link');
+        shifuCss.href = el;
+        shifuCss.rel = 'stylesheet';
+        document.head.appendChild(shifuCss);
+      });
+      this.state.shifu.css.forEach((el) => {
+        const shifuJs = document.createElement('script');
+        shifuJs.src = el;
+        document.body.appendChild(shifuJs);
+      });
+    });
+  }
+  render() {
+    return (
+        <div>
+          <div dangerouslySetInnerHTML={{ __html: this.state.shifu.header }}/>
+          <div dangerouslySetInnerHTML={{ __html: this.state.shifu.footer }}/>
+        </div>
+    )
+  }
+}
