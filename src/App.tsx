@@ -1,9 +1,23 @@
-import React from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import './App.css';
 
-export default class Shifu extends React.Component {
-  state = {
+interface Shifui {
+  header: string;
+  footer: string;
+  js: string[];
+  css: string[];
+}
+
+interface State {
+  shifu: Shifui;
+}
+interface Props {
+
+}
+
+export default class Shifu extends React.Component<Props, State> {
+  state:State = {
     shifu: {
       header: '',
       footer: '',
